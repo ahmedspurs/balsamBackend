@@ -113,7 +113,7 @@ exports.loginHospital = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    update user password
-// @route   POST /api/v1/auth/updatedpassword
+// @route   POST /api/v1/auth/userpassword
 // @access  Public
 exports.userPassword = asyncHandler(async (req, res, next) => {
   const { email, oldPassword, newPassword, confirmPassword } = req.body;
@@ -148,8 +148,8 @@ exports.userPassword = asyncHandler(async (req, res, next) => {
   next(new ErrorResponse());
 });
 
-// @desc    update user password
-// @route   POST /api/v1/auth/updatedpassword
+// @desc    update hospital password
+// @route   POST /api/v1/auth/hospitalpassword
 // @access  Public
 exports.hospitalPassword = asyncHandler(async (req, res, next) => {
   const { email, oldPassword, newPassword, confirmPassword } = req.body;

@@ -73,5 +73,12 @@ Hospitals.init(
   }
 );
 
-Hospitals.associate = (db) => {};
+Hospitals.associate = ({ Icus }) => {
+  Hospitals.hasMany(Icus, {
+    foreignKey: "hospitalId",
+    as: "icus",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+};
 module.exports = () => Hospitals;
