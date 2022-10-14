@@ -115,7 +115,7 @@ exports.loginHospital = asyncHandler(async (req, res, next) => {
 // @desc    update user password
 // @route   POST /api/v1/auth/updatedpassword
 // @access  Public
-exports.updatePassword = asyncHandler(async (req, res, next) => {
+exports.userPassword = asyncHandler(async (req, res, next) => {
   const { email, oldPassword, newPassword, confirmPassword } = req.body;
   // Validate email and password
   if (!email) return next(new ErrorResponse("please enter your email", 400));
@@ -139,7 +139,45 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
       { where: { email } }
     );
     if (user)
-      return res.status(203).json({ success: true, message: "user updated" });
+      return res
+        .status(203)
+        .json({ success: true, message: "password updated" });
+  } else {
+    return next(new ErrorResponse("password incorrect", 404));
+  }
+  next(new ErrorResponse());
+});
+
+// @desc    update user password
+// @route   POST /api/v1/auth/updatedpassword
+// @access  Public
+exports.hospitalPassword = asyncHandler(async (req, res, next) => {
+  const { email, oldPassword, newPassword, confirmPassword } = req.body;
+  // Validate email and password
+  if (!email) return next(new ErrorResponse("please enter your email", 400));
+  if (!oldPassword)
+    return next(new ErrorResponse("please enter your password", 400));
+  if (!newPassword)
+    return next(new ErrorResponse("please enter your new password", 400));
+  if (!confirmPassword)
+    return next(new ErrorResponse("please re enter your password", 400));
+  if (newPassword !== confirmPassword)
+    return next(new ErrorResponse("password not matched", 400));
+  // Check for user
+  const hospital = await Hospitals.findOne({ where: { email } });
+  if (!hospital) return next(new ErrorResponse("user not found", 404));
+  // Match user pssword
+  if (await bcrypt.compare(oldPassword, hospital.password)) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const hospital = await Hospitals.update(
+      { password: hashedPassword },
+      { where: { email } }
+    );
+    if (hospital)
+      return res
+        .status(203)
+        .json({ success: true, message: "password updated" });
   } else {
     return next(new ErrorResponse("password incorrect", 404));
   }
