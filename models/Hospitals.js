@@ -73,7 +73,7 @@ Hospitals.init(
   }
 );
 
-Hospitals.associate = ({ Icus, Clinics }) => {
+Hospitals.associate = ({ Icus, Clinics, Bookings, Appointments }) => {
   Hospitals.hasMany(Icus, {
     foreignKey: "hospitalId",
     as: "icus",
@@ -83,6 +83,18 @@ Hospitals.associate = ({ Icus, Clinics }) => {
   Hospitals.hasMany(Clinics, {
     foreignKey: "hospitalId",
     as: "clinics",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Hospitals.hasMany(Bookings, {
+    foreignKey: "hospitalId",
+    as: "bookings",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Hospitals.hasMany(Appointments, {
+    foreignKey: "hospitalId",
+    as: "appointments",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
