@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 14, 2022 at 07:42 PM
+-- Generation Time: Oct 15, 2022 at 06:37 AM
 -- Server version: 8.0.27
 -- PHP Version: 7.4.25
 
@@ -34,10 +34,43 @@ CREATE TABLE `bookings` (
   `user_id` int NOT NULL,
   `phone` varchar(14) COLLATE utf8mb4_general_ci NOT NULL,
   `address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'wait',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `hospital_id`, `icu_id`, `user_id`, `phone`, `address`, `status`, `createdAt`, `updatedAt`) VALUES
+(1, 1, 2, 1, '1233434', 'omdurman', 'wait', '2022-10-15 06:36:23', '2022-10-15 06:36:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `clinics`
+--
+
+CREATE TABLE `clinics` (
+  `id` int NOT NULL,
+  `hospital_id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `domain` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `resume` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `attend` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `price` float NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `clinics`
+--
+
+INSERT INTO `clinics` (`id`, `hospital_id`, `name`, `domain`, `resume`, `attend`, `price`, `phone`, `createdAt`, `updatedAt`) VALUES
+(2, 1, 'dr.yagoub', 'gerneral', 'phd', '3-4', 3000, '127837284', '2022-10-15 06:17:13', '2022-10-15 06:17:13');
 
 -- --------------------------------------------------------
 
@@ -81,6 +114,13 @@ CREATE TABLE `icus` (
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `icus`
+--
+
+INSERT INTO `icus` (`id`, `hospital_id`, `name`, `status`, `price`, `createdAt`, `updatedAt`) VALUES
+(1, 1, '102', 1, 2000, '2022-10-14 22:46:01', '2022-10-14 22:46:01');
+
 -- --------------------------------------------------------
 
 --
@@ -103,7 +143,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `address`, `createdAt`, `updatedAt`) VALUES
-(1, '.خسرانه بي كلوووووووووو', 'user1@gmail.com', '123456789', '$2a$10$lk.qdewTBQ0jKRn6WpjdReSFO9if6uHn6ekoZTG.V9.JB6wTkWoNm', 'kalakila', '2022-10-14 17:08:02', '2022-10-14 17:08:02');
+(1, '.خسرانه بي كلوووووووووو', 'user1@gmail.com', '123456789', '$2a$10$lk.qdewTBQ0jKRn6WpjdReSFO9if6uHn6ekoZTG.V9.JB6wTkWoNm', 'kalakila', '2022-10-14 17:08:02', '2022-10-14 17:08:02'),
+(2, '&lt;script>alert(\'hello world\')&lt;/script>', 'user2@gmail.com', '123456789', '$2a$10$4nT/wNeSwY0uwZ8mtcbyKePdEZwomqPpmOvSe5vee9xuavpCFxv/.', 'kalakila', '2022-10-15 01:31:56', '2022-10-15 01:31:56');
 
 --
 -- Indexes for dumped tables
@@ -116,6 +157,13 @@ ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `clinics`
+--
+ALTER TABLE `clinics`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `hospital_id` (`hospital_id`);
+
+--
 -- Indexes for table `hospitals`
 --
 ALTER TABLE `hospitals`
@@ -126,7 +174,8 @@ ALTER TABLE `hospitals`
 -- Indexes for table `icus`
 --
 ALTER TABLE `icus`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `hospital_id` (`hospital_id`);
 
 --
 -- Indexes for table `users`
@@ -143,7 +192,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `clinics`
+--
+ALTER TABLE `clinics`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `hospitals`
@@ -155,13 +210,29 @@ ALTER TABLE `hospitals`
 -- AUTO_INCREMENT for table `icus`
 --
 ALTER TABLE `icus`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `clinics`
+--
+ALTER TABLE `clinics`
+  ADD CONSTRAINT `clinics_ibfk_1` FOREIGN KEY (`hospital_id`) REFERENCES `hospitals` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `icus`
+--
+ALTER TABLE `icus`
+  ADD CONSTRAINT `icus_ibfk_1` FOREIGN KEY (`hospital_id`) REFERENCES `hospitals` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

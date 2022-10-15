@@ -47,11 +47,15 @@ const auth = require("./routes/auth");
 const users = require("./routes/users");
 const hospitals = require("./routes/hospitals");
 const icus = require("./routes/icus");
+const clinics = require("./routes/clinics");
+const bookings = require("./routes/bookings");
 // mount the router to the url's
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", users);
 app.use("/api/v1/hospitals", hospitals);
 app.use("/api/v1/icus", icus);
+app.use("/api/v1/clinics", clinics);
+app.use("/api/v1/bookings", bookings);
 app.use(errorHander);
 
 // running the app on process port or 5000 port as default

@@ -11,7 +11,6 @@ require("dotenv").config();
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, phone, address } = req.body;
-  console.log(req.body);
   if (!name) return next(new ErrorResponse("please add a name", 400));
   if (!email) return next(new ErrorResponse("please add an email", 400));
   if (!password) return next(new ErrorResponse("please add a password", 400));

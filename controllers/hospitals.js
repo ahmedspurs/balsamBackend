@@ -8,7 +8,7 @@ require("dotenv").config();
 // @access  Public
 exports.getHospitals = asyncHandler(async (req, res, next) => {
   const hospitals = await Hospitals.findAll({
-    include: ["icus"],
+    include: ["icus", " clinics"],
     order: [["id", "DESC"]],
   });
   if (!hospitals) return next(new ErrorResponse("hospitals not found", 404));
@@ -23,7 +23,7 @@ exports.getHospital = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const hospital = await Hospitals.findOne({
     where: { id },
-    include: ["icus"],
+    include: ["icus", "clinics"],
   });
   if (!hospital) return next(new ErrorResponse("hospital not found", 404));
   if (hospital) return res.status(200).json(hospital);
