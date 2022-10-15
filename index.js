@@ -4,6 +4,10 @@ const express = require("express"),
   compression = require("compression"),
   cors = require("cors"),
   { sequelize } = require("./models"),
+  rateLimit = require("express-rate-limit"),
+  hpp = require("hpp"),
+  helmet = require("helmet"),
+  xss = require("xss-clean"),
   errorHander = require("./middleware/error");
 // load project enviroment variables
 require("dotenv").config();
@@ -14,13 +18,29 @@ app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/public/"));
+
+// compress the response
 app.use(compression());
+// allow cors origin
 app.use(
   cors({
     origin: "*",
   })
 );
+// rate limiring
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100,
+});
+// hpp params pollution
+app.use(hpp());
+app.use(limiter);
+// enable cookie parser
 app.use(cookieParser());
+// enable security headers
+app.use(helmet());
+app.use(xss());
+// disable framework provider
 app.disable("x-powered-by");
 // load routes
 const auth = require("./routes/auth");
