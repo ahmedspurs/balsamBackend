@@ -29,6 +29,7 @@ exports.getHospital = asyncHandler(async (req, res, next) => {
   if (hospital) return res.status(200).json(hospital);
   next(new ErrorResponse());
 });
+
 // @desc    Update Hospital
 // @route   PUT /api/v1/hospitals/:id
 // @access  Private

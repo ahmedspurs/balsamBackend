@@ -34,7 +34,7 @@ exports.getBooking = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/bookings
 // @access  Private
 exports.createBooking = asyncHandler(async (req, res, next) => {
-  const { hospitalId, icuId, userId, phone, address, status } = req.body;
+  const { hospitalId, icuId, userId, phone, address } = req.body;
   // validatation
   if (!hospitalId)
     return next(new ErrorResponse("please add the hospital id", 400));

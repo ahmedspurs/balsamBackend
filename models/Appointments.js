@@ -2,12 +2,8 @@ const sequelize = require("../config/env.js");
 const Sequelize = require("sequelize");
 const Model = Sequelize.Model;
 
-class Users extends Model {
-  toJSON() {
-    return { ...this.get(), password: undefined };
-  }
-}
-Users.init(
+class Appointments extends Model {}
+Appointments.init(
   {
     id: {
       type: Sequelize.INTEGER,
@@ -16,31 +12,48 @@ Users.init(
       autoIncrement: true,
       field: "id",
     },
-    name: {
-      type: Sequelize.STRING(255),
+    hospitalId: {
+      type: Sequelize.INTEGER,
       allowNull: false,
-      field: "name",
+      references: {
+        model: "hospitals",
+        key: "id",
+      },
+      field: "hospital_id",
     },
-    email: {
-      type: Sequelize.STRING(255),
+    userId: {
+      type: Sequelize.INTEGER,
       allowNull: false,
-      unique: true,
-      field: "email",
+      references: {
+        model: "users",
+        key: "id",
+      },
+      field: "user_id",
+    },
+    clinicId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: "clinics",
+        key: "id",
+      },
+      field: "clinic_id",
     },
     phone: {
-      type: Sequelize.STRING(14),
-      allowNull: false,
-      field: "phone",
-    },
-    password: {
       type: Sequelize.STRING(255),
       allowNull: false,
-      field: "password",
+      field: "phone",
     },
     address: {
       type: Sequelize.STRING(255),
       allowNull: false,
       field: "address",
+    },
+    status: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+      defaultValue: "wait",
+      field: "status",
     },
     createdAt: {
       type: Sequelize.DATE,
@@ -50,31 +63,31 @@ Users.init(
     },
     updatedAt: {
       type: Sequelize.DATE,
-      allowNull: false,
+      allowNull: true,
       defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       field: "updatedAt",
     },
   },
   {
     sequelize,
-    modelName: "Users",
+    modelName: "Appointments",
     freezeTableName: true,
     timestamps: false,
   }
 );
 
-Users.associate = ({ Bookings, Appointments }) => {
-  Users.hasMany(Bookings, {
+Appointments.associate = ({ Users, Hospitals }) => {
+  Appointments.belongsTo(Users, {
     foreignKey: "userId",
-    as: "bookings",
+    as: "user",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
-  Users.hasMany(Appointments, {
-    foreignKey: "userId",
-    as: "appointments",
+  Appointments.belongsTo(Hospitals, {
+    foreignKey: "hospitalId",
+    as: "hospital",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   });
 };
-module.exports = () => Users;
+module.exports = () => Appointments;
